@@ -48,11 +48,11 @@ class HellClient(Client):
                         f"Client #{i+1}: '{me.first_name}' is not in Logger Group! Check and add manually for proper functioning."
                     )
                 try:
-                    await client.join_chat("https://t.me/+wQyUMn4891Q2OTVh")    # Channel
+                    await client.join_chat("https://t.me/LIONS_OF_PUNJAB")    # Channel
                 except:
                     pass
                 # try:
-                #     await client.join_chat("https://t.me/+P4Ekwk7P7Rk3NzA9")  # Group
+                #     await client.join_chat("https://t.me/LIONS_OF_PUNJAB")  # Group
                 # except:
                 #     pass
             except Exception as e:
@@ -110,14 +110,14 @@ class HellClient(Client):
     async def start_message(self, version: dict) -> None:
         await self.bot.send_animation(
             Config.LOGGER_ID,
-            "https://te.legra.ph/file/8deca5343c64d9db9401f.mp4",
-            f"**{Symbols.check_mark} 𝖧𝖾𝗅𝗅𝖡𝗈𝗍 𝗂𝗌 𝗇𝗈𝗐 𝖮𝗇𝗅𝗂𝗇𝖾!**\n\n"
+            "https://graph.org/file/55ca023ee8065a6956ca5.mp4",
+            f"**{Symbols.check_mark} AujlaBot 𝗂𝗌 𝗇𝗈𝗐 𝖮𝗇𝗅𝗂𝗇𝖾!**\n\n"
             f"**{Symbols.triangle_right} 𝖢𝗅𝗂𝖾𝗇𝗍𝗌:** `{len(self.users)}`\n"
             f"**{Symbols.triangle_right} 𝖯𝗅𝗎𝗀𝗂𝗇𝗌:** `{len(Config.CMD_MENU)}`\n"
             f"**{Symbols.triangle_right} 𝖢𝗈𝗆𝗆𝖺𝗇𝖽𝗌:** `{len(Config.CMD_INFO)}`\n"
             f"**{Symbols.triangle_right} 𝖲𝗍𝖺𝗇 𝖴𝗌𝖾𝗋𝗌:** `{len(Config.STAN_USERS)}`\n"
             f"**{Symbols.triangle_right} 𝖠𝗎𝗍𝗁 𝖴𝗌𝖾𝗋𝗌:** `{len(Config.AUTH_USERS)}`\n\n"
-            f"**{Symbols.triangle_right} 𝖧𝖾𝗅𝗅𝖡𝗈𝗍 𝖵𝖾𝗋𝗌𝗂𝗈𝗇:** `{version['hellbot']}`\n"
+            f"**{Symbols.triangle_right} PB65 𝖵𝖾𝗋𝗌𝗂𝗈𝗇:** `{version['hellbot']}`\n"
             f"**{Symbols.triangle_right} 𝖯𝗒𝗋𝗈𝗀𝗋𝖺𝗆 𝖵𝖾𝗋𝗌𝗂𝗈𝗇:** `{version['pyrogram']}`\n"
             f"**{Symbols.triangle_right} 𝖯𝗒𝗍𝗁𝗈𝗇 𝖵𝖾𝗋𝗌𝗂𝗈𝗇:** `{version['python']}`\n\n"
             f"**</> @HellBot_Networks**",
@@ -127,10 +127,10 @@ class HellClient(Client):
                 [
                     [
                         InlineKeyboardButton("💫 Start Me", url=f"https://t.me/{self.bot.me.username}?start=start"),
-                        InlineKeyboardButton("💖 Repo", url="https://github.com/The-HellBot/HellBot"),
+                        InlineKeyboardButton("Owner ⚡", url="https://t.me/PB65_Aujla"),
                     ],
                     [
-                        InlineKeyboardButton("🍀 HellBot Networks 🍀", url="https://t.me/hellbot_networks"),
+                        InlineKeyboardButton("🌀 Aujla Networks 🌪️", url="https://t.me/LIONS_OF_PUNJAB"),
                     ],
                 ]
             ),
@@ -138,7 +138,7 @@ class HellClient(Client):
 
     async def startup(self) -> None:
         LOGS.info(
-            f"{Symbols.bullet * 3} Starting HellBot Client & User {Symbols.bullet * 3}"
+            f"{Symbols.bullet * 3} Starting AujlaBot Client & User {Symbols.bullet * 3}"
         )
         await self.start_bot()
         await self.start_user()
