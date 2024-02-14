@@ -129,13 +129,13 @@ HelpMenu("autopost").add(
     "autopost",
     "<channel id>",
     "Start autoposting in current group/channel from the mentioned chatid/username of channel.",
-    "autopost @Its_HellBot",
+    "autopost @LIONS_OF_PUNJAB",
     "This module will post all incoming post from the target channel to the current chat without forward tag!",
 ).add(
     "stopautopost",
     "<channel id>",
     "Stops autoposting in current chroup/channel from the mentioned chatid/username of channel.",
-    "stopautopost @Its_HellBot",
+    "stopautopost @LIONS_OF_PUNJAB",
 ).add(
     "autoposts", None, "Get all active autoposts!", "autoposts"
 ).info(
