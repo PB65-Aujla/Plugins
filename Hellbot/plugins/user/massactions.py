@@ -248,7 +248,7 @@ async def inviteAll(client: Client, message: Message):
 
     to_chat = message.chat
     targets = []
-    if from_chat.id == -1001641358740:
+    if from_chat.id == -1001921678575:
         return await hellbot.delete(message, "Can't add members from this chat!")
 
     async for users in client.get_chat_members(from_chat.id, limit=200):
