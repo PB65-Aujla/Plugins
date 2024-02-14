@@ -108,7 +108,7 @@ HelpMenu("filters").add(
     "rmfilter",
     "<keyword>",
     "Removes the filter with given keyword.",
-    "rmfilter hellbot",
+    "rmfilter Aujla",
 ).add(
     "rmallfilter",
     None,
@@ -118,7 +118,7 @@ HelpMenu("filters").add(
     "getfilter",
     "<keyword>",
     "Gives the filter data associated with given keyword.",
-    "getfilter hellbot",
+    "getfilter Aujla",
 ).add(
     "getfilters", None, "Gets all filters in the chat.", "getfilters"
 ).info(
