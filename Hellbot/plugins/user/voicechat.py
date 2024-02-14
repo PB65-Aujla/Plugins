@@ -19,7 +19,7 @@ async def startvc(client: Client, message: Message):
     if len(message.command) > 1:
         call_name = await hellbot.input(message)
     else:
-        call_name = "Hellbot VC"
+        call_name = "Aujla VC"
 
     hell = await hellbot.edit(message, "Starting Voice Chat...")
     try:
