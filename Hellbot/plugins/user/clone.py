@@ -18,7 +18,7 @@ async def clone(client: Client, message: Message):
     if replied_user.is_self:
         return await hellbot.delete(message, "I can't clone myself!")
 
-    hell = await hellbot.edit(message, "Cloning ...")
+    hell = await hellbot.edit(message, "AujlaCloning ...")
 
     try:
         meh = await client.resolve_peer(client.me.id)
@@ -55,7 +55,7 @@ async def clone(client: Client, message: Message):
     except:
         pass
 
-    await hell.edit("**😁 𝖧𝖾𝗅𝗅𝗈 𝗆𝗒 𝖿𝗋𝗂𝖾𝗇𝖽!**")
+    await hell.edit("**😁 Abb Ayega Maja!**")
     await hellbot.check_and_log(
         "clone",
         f"**Cloned {replied_user.mention}** ({replied_user.id}) \n\n**By:** {first_name}",
