@@ -34,7 +34,7 @@ async def restart_bot(_, message: Message):
 async def shutdown_bot(_, message: Message):
     await hellbot.edit(
         message,
-        "**[ ⚠️ ]** __HellBot is now offline! Manually start again to get it back online.__",
+        "**[ ⚠️ ]** __AujlaBot is now offline! Manually start again to get it back online.__",
     )
     try:
         if HEROKU_APP:
@@ -52,7 +52,7 @@ async def shutdown_bot(_, message: Message):
 
 @on_message("cleanup", allow_stan=True)
 async def clenup_bot(_, message: Message):
-    await hellbot.edit(message, "**♻️ HellBot Cleanup Completed!**")
+    await hellbot.edit(message, "**♻️ AujlaBot Cleanup Completed!**")
     await restart(clean_up=True)
 
 
