@@ -255,12 +255,12 @@ HelpMenu("profile").add(
     "setbio Embracing the Hellbot.",
     "To remove the bio dont pass any argument.",
 ).add(
-    "setname", "<new name>", "Set the name of the bot.", "setname HellBot"
+    "setname", "<new name>", "Set the name of the bot.", "setname AujlaBot"
 ).add(
     "setusername",
     "<new username>",
     "Set the username of the bot.",
-    "setusername HellBot",
+    "setusername AujlaBot",
     "To remove the username dont pass any argument.",
 ).add(
     "delpfp",
