@@ -222,7 +222,7 @@ async def handle_incoming_pm(client: Client, message: Message):
             f"**{Symbols.cross_mark} 𝖤𝗇𝗈𝗎𝗀𝗁 𝗈𝖿 𝗒𝗈𝗎𝗋 𝗌𝗉𝖺𝗆𝗆𝗂𝗇𝗀 𝗁𝖾𝗋𝖾! 𝖡𝗅𝗈𝖼𝗄𝗂𝗇𝗀 𝗒𝗈𝗎 𝖿𝗋𝗈𝗆 𝖯𝖬 𝗎𝗇𝗍𝗂𝗅 𝖿𝗎𝗋𝗍𝗁𝖾𝗋 𝗇𝗈𝗍𝗂𝖼𝖾.**",
         )
 
-    pm_msg = f"🍀 𝐇𝐞𝐥𝐥𝐁𝐨𝐭 𝐏𝐌 𝐒𝐞𝐜𝐮𝐫𝐢𝐭𝐲!\n\n"
+    pm_msg = f"🍀 𝗔𝘂𝗷𝗹𝗮 𝐏𝐌 𝐒𝐞𝐜𝐮𝐫𝐢𝐭𝐲!\n\n"
     custom_pmmsg = await db.get_env(ENV.custom_pmpermit)
 
     if custom_pmmsg:
