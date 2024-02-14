@@ -60,7 +60,7 @@ async def instagramReels(_, message: Message):
             await hell.edit("Uploading...")
             await message.reply_video(
                 fileName,
-                caption=f"__💫 Downloaded Instagram Reels!__ \n\n**</> @HellBot_Networks**",
+                caption=f"__💫 Downloaded Instagram Reels!__ \n\n**</> @LIONS_OF_PUNJAB**",
             )
             await hell.delete()
             os.remove(fileName)
@@ -119,7 +119,7 @@ async def instagramPost(_, message: Message):
                     file.write(binary)
                 await message.reply_video(
                     fileName,
-                    caption=f"__💫 Downloaded Instagram Post!__ \n\n**</> @HellBot_Networks**",
+                    caption=f"__💫 Downloaded Instagram Post!__ \n\n**</> @LIONS_OF_PUNJAB**",
                 )
                 await hell.delete()
                 os.remove(fileName)
