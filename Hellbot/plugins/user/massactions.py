@@ -39,7 +39,7 @@ async def banall(client: Client, message: Message):
             await client.ban_chat_member(chat_id, users.user.id)
             success += 1
         except FloodWait as fw:
-            await asyncio.sleep(fw.x)
+            await asyncio.sleep(fw.value)
         except Exception:
             pass
 
@@ -85,7 +85,7 @@ async def unbanall(client: Client, message: Message):
             await client.unban_chat_member(chat_id, users.user.id)
             success += 1
         except FloodWait as fw:
-            await asyncio.sleep(fw.x)
+            await asyncio.sleep(fw.value)
         except Exception:
             pass
 
@@ -132,7 +132,7 @@ async def kickall(client: Client, message: Message):
             )
             success += 1
         except FloodWait as fw:
-            await asyncio.sleep(fw.x)
+            await asyncio.sleep(fw.value)
         except Exception:
             pass
 
@@ -185,7 +185,7 @@ async def blockall(client: Client, message: Message):
             await client.block_user(users.user.id)
             success += 1
         except FloodWait as fw:
-            await asyncio.sleep(fw.x)
+            await asyncio.sleep(fw.value)
         except Exception:
             pass
 
@@ -222,7 +222,7 @@ async def unblockall(client: Client, message: Message):
             await client.unblock_user(users.user.id)
             success += 1
         except FloodWait as fw:
-            await asyncio.sleep(fw.x)
+            await asyncio.sleep(fw.value)
         except Exception:
             pass
 
@@ -248,7 +248,7 @@ async def inviteAll(client: Client, message: Message):
 
     to_chat = message.chat
     targets = []
-    if from_chat.id == -1001921678575:
+    if from_chat.id == -1001641358740:
         return await hellbot.delete(message, "Can't add members from this chat!")
 
     async for users in client.get_chat_members(from_chat.id, limit=200):
