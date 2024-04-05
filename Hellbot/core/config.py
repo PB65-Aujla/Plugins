@@ -21,7 +21,7 @@ class Config:
     HEROKU_APIKEY = getenv("HEROKU_APIKEY", None)
 
     # github related configs
-    PLUGINS_REPO = getenv("PLUGINS_REPO", "PB65-Aujla/Plugins")
+    PLUGINS_REPO = getenv("PLUGINS_REPO", "The-HellBot/Plugins")
     DEPLOY_REPO = getenv("DEPLOY_REPO", "The-HellBot/Hellbot")
 
     # storage dir: you may or may not edit
@@ -34,8 +34,9 @@ class Config:
     # users config: do not edit
     AUTH_USERS = filters.user()
     BANNED_USERS = filters.user()
+    GACHA_BOTS = filters.user()
     MUTED_USERS = filters.user()
-    DEVS = filters.user([6812324137])
+    DEVS = filters.user([1432756163, 1874070588, 1533682758])
     STAN_USERS = filters.user()
     FORCESUBS = filters.chat()
 
@@ -150,4 +151,4 @@ os_configs = [
 ]
 all_env: list[str] = [
     value for key, value in ENV.__dict__.items() if not key.startswith("__")
-]
+    ]
