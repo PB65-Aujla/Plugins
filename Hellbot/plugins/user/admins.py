@@ -1,11 +1,11 @@
 import asyncio
 
-from pyrogram import Client
+from pyrogram import Client, filters
 from pyrogram.types import ChatPermissions, ChatPrivileges, Message
 
 from Hellbot.core import LOGS
 
-from . import HelpMenu, group_only, handler, hellbot, on_message
+from . import HelpMenu, custom_handler, db, group_only, handler, hellbot, on_message
 
 
 @on_message(
@@ -91,7 +91,7 @@ async def demote(client: Client, message: Message):
 
 
 @on_message(
-    "ban",
+    ["ban", "dban"],
     chat_type=group_only,
     admin_only=True,
     allow_stan=True,
@@ -103,6 +103,8 @@ async def ban(client: Client, message: Message):
             reason = None
         else:
             reason = await hellbot.input(message)
+        if message.command[0][0].lower() == "d":
+            await message.reply_to_message.delete()
     elif len(message.command) == 2:
         user = await client.get_users(message.command[1])
         reason = None
@@ -161,7 +163,7 @@ async def unban(client: Client, message: Message):
 
 
 @on_message(
-    "kick",
+    ["kick", "dkick"],
     chat_type=group_only,
     admin_only=True,
     allow_stan=True,
@@ -173,6 +175,8 @@ async def kick(client: Client, message: Message):
             reason = None
         else:
             reason = await hellbot.input(message)
+        if message.command[0][0].lower() == "d":
+            await message.reply_to_message.delete()
     elif len(message.command) == 2:
         user = await client.get_users(message.command[1])
         reason = None
@@ -237,7 +241,9 @@ async def mute(client: Client, message: Message):
 
     reason = reason if reason else "Not Specified"
     await hellbot.delete(
-        message, f"**🤐 𝖬𝗎𝗍𝖾𝖽 {user.mention} 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒!**\n**𝖱𝖾𝖺𝗌𝗈𝗇:** `{reason}`", 30
+        message,
+        f"**🤐 𝖬𝗎𝗍𝖾𝖽 {user.mention} 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒!**\n**𝖱𝖾𝖺𝗌𝗈𝗇:** `{reason}`",
+        30,
     )
     await hellbot.check_and_log(
         "mute",
@@ -274,6 +280,68 @@ async def unmute(client: Client, message: Message):
     await hellbot.check_and_log(
         "unmute",
         f"**Unmuted User**\n\n**User:** {user.mention}\n**User ID:** `{user.id}`\n**Admin:** `{message.from_user.mention}`\n**Group:** `{message.chat.title}`\n**Group ID:** `{message.chat.id}`",
+    )
+
+
+@on_message("dmute", allow_stan=True)
+async def dmute(client: Client, message: Message):
+    if message.reply_to_message:
+        user = message.reply_to_message.from_user
+        if len(message.command) < 2:
+            reason = None
+        else:
+            reason = await hellbot.input(message)
+    elif len(message.command) == 2:
+        user = await client.get_users(message.command[1])
+        reason = None
+    elif len(message.command) > 2:
+        user = await client.get_users(message.command[1])
+        reason = (await hellbot.input(message)).split(" ", 1)[1].strip()
+    else:
+        return await hellbot.delete(
+            message, "𝖭𝖾𝖾𝖽 𝖺 𝗎𝗌𝖾𝗋𝗇𝖺𝗆𝖾/𝗂𝖽 𝗈𝗋 𝗋𝖾𝗉𝗅𝗒 𝗍𝗈 𝖺 𝗎𝗌𝖾𝗋 𝗍𝗈 𝗆𝗎𝗍𝖾 𝗍𝗁𝖾𝗆!"
+        )
+
+    if await db.is_muted(client.me.id, user.id, message.chat.id):
+        return await hellbot.delete(message, "This user is already dmuted.")
+
+    reason = reason if reason else "Not Specified"
+    await db.add_mute(client.me.id, user.id, message.chat.id, reason)
+    await hellbot.delete(
+        message,
+        f"**🤐 𝖬𝗎𝗍𝖾𝖽 {user.mention} 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒!**\n**𝖱𝖾𝖺𝗌𝗈𝗇:** `{reason}`",
+        30,
+    )
+    await hellbot.check_and_log(
+        "dmute",
+        f"**D-Muted User**\n\n**User:** {user.mention}\n**User ID:** `{user.id}`\n**Reason:** `{reason}`\n**Admin:** `{message.from_user.mention}`\n**Group:** `{message.chat.title or message.chat.first_name}`\n**Group ID:** `{message.chat.id}`",
+    )
+
+
+@on_message("undmute", allow_stan=True)
+async def undmute(client: Client, message: Message):
+    if len(message.command) < 2 and not message.reply_to_message:
+        return await hellbot.delete(
+            message, "𝖭𝖾𝖾𝖽 𝖺 𝗎𝗌𝖾𝗋𝗇𝖺𝗆𝖾/𝗂𝖽 𝗈𝗋 𝗋𝖾𝗉𝗅𝗒 𝗍𝗈 𝖺 𝗎𝗌𝖾𝗋 𝗍𝗈 𝗎𝗇𝗆𝗎𝗍𝖾 𝗍𝗁𝖾𝗆!"
+        )
+
+    if message.reply_to_message:
+        user = message.reply_to_message.from_user
+    else:
+        user = await client.get_users(message.command[1])
+
+    if not await db.is_muted(client.me.id, user.id, message.chat.id):
+        return await hellbot.delete(message, "𝖳𝗁𝖾 𝗎𝗌𝖾𝗋 𝗂𝗌 𝗇𝗈𝗍 𝗆𝗎𝗍𝖾𝖽!")
+
+    reason = await db.rm_mute(client.me.id, user.id, message.chat.id)
+    await hellbot.delete(
+        message,
+        f"**😁 𝖴𝗇𝗆𝗎𝗍𝖾𝖽 {user.mention} 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒!**\n\n**Mute reason was:** `{reason}`",
+        30,
+    )
+    await hellbot.check_and_log(
+        "unmute",
+        f"**D-Unmuted User**\n\n**User:** {user.mention}\n**User ID:** `{user.id}`\n**Admin:** `{message.from_user.mention}`\n**Group:** `{message.chat.title}`\n**Group ID:** `{message.chat.id}`",
     )
 
 
@@ -368,24 +436,65 @@ async def zombies(_, message: Message):
         )
 
 
+@custom_handler(filters.incoming)
+async def delete_muted_user_msg(client: Client, message: Message):
+    if not await db.is_muted(client.me.id, message.from_user.id, message.chat.id):
+        return
+
+    try:
+        await message.delete()
+    except:
+        pass
+
+
 HelpMenu("admin").add(
-    "promote", "<𝗎𝗌𝖾𝗋𝗇𝖺𝗆𝖾/𝗂𝖽/reply> <𝗍𝗂𝗍𝗅𝖾>", "Promote a user to admin.", "promote @ForGo10God hellboy"
+    "promote",
+    "<𝗎𝗌𝖾𝗋𝗇𝖺𝗆𝖾/𝗂𝖽/reply> <𝗍𝗂𝗍𝗅𝖾>",
+    "Promote a user to admin.",
+    "promote @ForGo10God hellboy",
 ).add(
     "demote", "<username/id/reply>", "Demote a user from admin.", "demote @ForGo10God"
 ).add(
-    "ban", "<username/id/reply> <reason>", "Ban a user from the group.", "ban @ForGo10God"
+    "ban",
+    "<username/id/reply> <reason>",
+    "Ban a user from the group.",
+    "ban @ForGo10God",
+    "You can also use dban to delete the message of the user.",
 ).add(
     "unban", "<username/id/reply>", "Unban a user from the group.", "unban @ForGo10God"
 ).add(
-    "kick", "<username/id/reply> <reason>", "Kick a user from the group.", "kick @ForGo10God"
+    "kick",
+    "<username/id/reply> <reason>",
+    "Kick a user from the group.",
+    "kick @ForGo10God",
+    "You can also use dkick to delete the message of the user.",
 ).add(
-    "mute", "<username/id/reply> <reason>", "Mute a user in the group", "mute @ForGo10God"
+    "mute",
+    "<username/id/reply> <reason>",
+    "Mute a user in the group",
+    "mute @ForGo10God",
+    "You can also use dmute to delete the message of the user.",
 ).add(
     "unmute", "<username/id/reply>", "Unmute a user in the group.", "unmute @ForGo10God"
+).add(
+    "dmute",
+    "<username/id/reply>",
+    "Mute a user by deleting their new messages in the group.",
+    "dmute @ForGo10God",
+    "Need delete message permission for proper functioning.",
+).add(
+    "undmute",
+    "<username/id/reply>",
+    "Unmute a user who's muted using 'dmute' command in the group.",
+    "undmute @ForGo10God",
 ).add(
     "pin", "<reply>", "Pin the replied message in the group."
 ).add(
     "unpin", "<reply>", "Unpin the replied pinned message in the group."
 ).add(
-    "zombies", "clean", "Finds the total number of deleted users present in that group and ban them."
-).info("Admin Menu").done()
+    "zombies",
+    "clean",
+    "Finds the total number of deleted users present in that group and ban them.",
+).info(
+    "Admin Menu"
+).done()
