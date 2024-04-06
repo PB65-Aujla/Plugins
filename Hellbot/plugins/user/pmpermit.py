@@ -197,7 +197,7 @@ async def set_pmpermit(_, message: Message):
         await hellbot.delete(message, "**Invalid Argument!**")
 
 
-@custom_handler(filters.outgoing & filters.private)
+@custom_handler(filters.outgoing & filters.private & ~filters.bot)
 async def handler_outgoing_pm(client: Client, message: Message):
     if message.chat.id == 777000:
         return
@@ -207,8 +207,9 @@ async def handler_outgoing_pm(client: Client, message: Message):
 
     if not await db.is_pmpermit(client.me.id, message.chat.id):
         await db.add_pmpermit(client.me.id, message.chat.id)
+        hell = await client.send_message(message.chat.id, "Approving ...")
         await hellbot.delete(
-            message,
+            hell,
             f"**{Symbols.check_mark} Auto-Approved Outgoing PM:** {message.chat.first_name}",
         )
 
@@ -242,7 +243,7 @@ async def handle_incoming_pm(client: Client, message: Message):
             f"**{Symbols.cross_mark} 𝖤𝗇𝗈𝗎𝗀𝗁 𝗈𝖿 𝗒𝗈𝗎𝗋 𝗌𝗉𝖺𝗆𝗆𝗂𝗇𝗀 𝗁𝖾𝗋𝖾! 𝖡𝗅𝗈𝖼𝗄𝗂𝗇𝗀 𝗒𝗈𝗎 𝖿𝗋𝗈𝗆 𝖯𝖬 𝗎𝗇𝗍𝗂𝗅 𝖿𝗎𝗋𝗍𝗁𝖾𝗋 𝗇𝗈𝗍𝗂𝖼𝖾.**",
         )
 
-    pm_msg = f"🍀 AUJLABOT PM SEQUIRTY!\n\n"
+    pm_msg = f"🍀 AUJLA 𝐏𝐌 𝐒𝐞𝐜𝐮𝐫𝐢𝐭𝐲!\n\n"
     custom_pmmsg = await db.get_env(ENV.custom_pmpermit)
 
     if custom_pmmsg:
