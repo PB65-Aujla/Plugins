@@ -1,19 +1,23 @@
 import io
 import os
-from shutil import rmtree
 import time
+from shutil import rmtree
+
 import requests
 from glitch_this import ImageGlitcher
 from PIL import Image
 from pyrogram.enums import MessageMediaType
-from pyrogram.types import InputMediaPhoto, Message, InputMediaDocument
+from pyrogram.types import InputMediaDocument, InputMediaPhoto, Message
 
 from Hellbot.core import ENV
-from Hellbot.functions.google import googleimagesdownload
-from Hellbot.functions.images import get_wallpapers, deep_fry
+from Hellbot.functions.images import deep_fry, download_images, get_wallpapers
 from Hellbot.functions.tools import runcmd
 
 from . import Config, HelpMenu, db, hellbot, on_message
+
+
+def _chunk(images: list[str]) -> list[list]:
+    return [images[i : i + 10] for i in range(0, len(images), 10)]
 
 
 @on_message(["image", "img"], allow_stan=True)
@@ -28,32 +32,28 @@ async def searchImage(_, message: Message):
     if ";" in query:
         try:
             query, limit = query.split(";", 1)
-            limit = int(limit)
         except:
             pass
 
-    googleImage = googleimagesdownload()
     to_send = []
-    args = {
-        "keywords": query,
-        "limit": limit,
-        "format": "jpg",
-        "output_directory": Config.DWL_DIR,
-    }
+    images = await download_images(query, int(limit))
 
-    path_args, _ = googleImage.download(args)
-    images = path_args.get(query)
     for image in images:
         to_send.append(InputMediaPhoto(image))
 
     if to_send:
-        await hell.reply_media_group(to_send)
+        if len(to_send) > 10:
+            for chunk in _chunk(to_send):
+                await hell.reply_media_group(chunk)
+        else:
+            await hell.reply_media_group(to_send)
+
         await hellbot.delete(hell, "Uploaded!")
     else:
         await hellbot.delete(hell, "No images found.")
 
     try:
-        rmtree(Config.DWL_DIR + query + "/")
+        rmtree("./images")
     except:
         pass
 
