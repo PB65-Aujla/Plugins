@@ -5,11 +5,10 @@ import time
 import requests
 from pyrogram.types import Message
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.expected_conditions import presence_of_element_located, visibility_of_element_located
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
 from selenium.webdriver.support.wait import WebDriverWait
 
 from Hellbot.functions.driver import Driver
-from Hellbot import LOGS
 
 from . import HelpMenu, hellbot, on_message
 
@@ -74,65 +73,6 @@ async def instagramReels(_, message: Message):
         await hellbot.error(hell, f"**Error:** `{e}`")
 
 
-# @on_message("igpost", allow_stan=True)
-# async def instagramPosts(_, message: Message):
-#     if len(message.command) < 2:
-#         return await hellbot.delete(
-#             message, "Give an instagram post link to download."
-#         )
-
-#     hell = await hellbot.edit(message, "Searching...")
-
-#     query = await hellbot.input(message)
-#     isInstagramLink = lambda link: bool(
-#         (re.compile(r"^https?://(?:www\.)?instagram\.com/p/")).match(link)
-#     )
-
-#     if not isInstagramLink(query):
-#         return await hellbot.error(hell, "Give a valid instagram post link.")
-
-#     try:
-#         driver, _ = Driver.get()
-#         if not driver:
-#             return await hellbot.error(hell, _)
-
-#         driver.get(query)
-#         wait = WebDriverWait(driver, 10)
-
-#         try:    
-#             element = wait.until(presence_of_element_located((By.TAG_NAME, "video")))
-#             extention = "mp4"
-#         except:
-#             element = wait.until(presence_of_element_located((By.TAG_NAME, "img")))
-#             extention = "jpg"
-
-#         media = element.get_attribute("src")
-#         driver.quit()
-#         if media:
-#             await hell.edit("Found the post. **Downloading...**")
-
-#             binary = requests.get(media).content
-#             fileName = f"media_{int(time.time())}.{extention}"
-#             with open(fileName, "wb") as file:
-#                 file.write(binary)
-
-#             await hell.edit("Uploading...")
-#             await message.reply_document(
-#                 fileName,
-#                 caption=f"__💫 Downloaded Instagram Post!__ \n\n**</> @Punjab_Haryana_Himachal**",
-#                 force_document=False,
-#             )
-#             await hell.delete()
-#             os.remove(fileName)
-#         else:
-#             await hellbot.error(
-#                 hell,
-#                 "Unable to download the post. Make sure the link is valid or the post is not from a private account.",
-#             )
-#     except Exception as e:
-#         await hellbot.error(hell, f"**Error:** `{e}`")
-
-
 @on_message("igpost", allow_stan=True)
 async def instagramPost(_, message: Message):
     if len(message.command) < 2:
@@ -153,57 +93,33 @@ async def instagramPost(_, message: Message):
         if not driver:
             return await hellbot.error(hell, _)
 
-        media = []
+        reels = []
         driver.get(query)
         wait = WebDriverWait(driver, 10)
+        element = wait.until(presence_of_element_located((By.TAG_NAME, "video")))
+        reels.append(element.get_attribute("src"))
 
-        # get the first media
         try:
-            element = wait.until(visibility_of_element_located((By.TAG_NAME, "video")))
-            extention = "mp4"
-        except:
-            element = wait.until(visibility_of_element_located((By.TAG_NAME, "img")))
-            extention = "jpg"
-        media.append((element.get_attribute("src"), extention))
-
-        # check if there are more media
-        try:
-            button = driver.find_element(By.XPATH, "//button[@aria-label='Next']")
-        except:
-            button = False
-
-        # get all media
-        while button:
-            try:
-                button.click()
-                try:
-                    element = wait.until(visibility_of_element_located((By.TAG_NAME, "video")))
-                    extention = "mp4"
-                except:
-                    element = wait.until(visibility_of_element_located((By.TAG_NAME, "img")))
-                    extention = "jpg"
-                media.append((element.get_attribute("src"), extention))
-                try:
-                    button = driver.find_element(By.XPATH, "//button[@aria-label='Next']")
-                except:
-                    button = False
-            except Exception as e:
-                LOGS.info("--> " + str(e))
+            driver.find_element(By.XPATH, "//button[@aria-label='Next']").click()
+            element = wait.until(presence_of_element_located((By.TAG_NAME, "video")))
+            reels.append(element.get_attribute("src"))
+        except Exception as e:
+            driver.quit()
+            return await hellbot.error(hell, f"`{e}`")
 
         driver.quit()
 
-        if media:
+        if reels:
             await hell.edit("**Downloading...**")
 
-            for post in media:
-                binary = requests.get(post[0]).content
-                fileName = f"post_{int(time.time())}.{post[1]}"
+            for reel in reels:
+                binary = requests.get(reel).content
+                fileName = f"post_{int(time.time())}.mp4"
                 with open(fileName, "wb") as file:
                     file.write(binary)
-                await message.reply_document(
+                await message.reply_video(
                     fileName,
                     caption=f"__💫 Downloaded Instagram Post!__ \n\n**</> @Punjab_Haryana_Himachal**",
-                    force_document=False,
                 )
                 await hell.delete()
                 os.remove(fileName)
@@ -298,13 +214,13 @@ HelpMenu("instagram").add(
     "Download instagram reels.",
     "reels https://www.instagram.com/reel/Cr24EiKNTL7/",
 ).add(
-    "igpost",
+    "igpost", #Bugged: to-be-fixed : only downloads a single post
     "<instagram post link>",
     "Download instagram post.",
     "igpost https://www.instagram.com/p/C06rAjDJlJs/",
     "If the post has multiple videos, it will download all of them one by one.",
 ).add(
-    "iguser",
+    "iguser", #Bugged
     "<instagram username>",
     "Get instagram user info.",
     "iguser therock",
