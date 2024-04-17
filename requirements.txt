@@ -1,5 +1,4 @@
 bs4
-pydub
 cinemagoer
 edge-tts
 emoji
