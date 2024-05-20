@@ -23,7 +23,7 @@ async def start_pm(_, message: Message):
 
 @hellbot.bot.on_message(filters.command("help") & Config.AUTH_USERS)
 async def help_pm(_, message: Message):
-    btns = gen_bot_help_buttons()
+    btns = await gen_bot_help_buttons()
 
     await message.reply_text(
         HELP_MSG,
@@ -34,7 +34,7 @@ async def help_pm(_, message: Message):
 
 @hellbot.bot.on_message(filters.command("restart") & Config.AUTH_USERS)
 async def restart_clients(_, message: Message):
-    await message.reply_text("Aujla Bot Restart Successfully ✅")
+    await message.reply_text("AujlaBot Restarted Successfully ✅")
     try:
         if HEROKU_APP:
             try:
